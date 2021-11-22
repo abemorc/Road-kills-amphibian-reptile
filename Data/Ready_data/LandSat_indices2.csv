@@ -1,4 +1,4 @@
-Meses,Transect,Subtransec,Cuadrante,NDWI (Agua),NDMI (Humedad),NDVI (Vegetación),LST (Temperatura)
+Meses,Transecto,Subtransecto,Cuadrante,NDWI_Agua,NDMI_Humedad,NDVI_Vegetacion,LST_Temperatura
 Agosto,1,1,1,-0.39255,0.22957,0.75708,18.97287
 Agosto,1,1,1,-0.40693,0.24951,0.82744,19.39609
 Agosto,1,1,1,-0.3441,0.18872,0.77869,19.80276

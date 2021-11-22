@@ -1,4 +1,4 @@
-Meses,Transect,Subtransec,Cuadrante,NDWI (Agua),NDMI (Humedad),NDVI (Vegetación),LST (Temperatura)
+Meses,Transecto,Subtransecto,Cuadrante,NDWI_Agua,NDMI_Humedad,NDVI_Vegetacion,LST_Temperatura
 Octubre,1,1,1,-0.1422,0.12345,0.14659,12.47308
 Octubre,1,1,1,-0.14471,0.12215,0.15056,12.38779
 Octubre,1,1,1,-0.1525,0.12625,0.15939,12.2944

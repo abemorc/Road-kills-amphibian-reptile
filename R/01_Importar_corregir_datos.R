@@ -32,16 +32,25 @@ df1 <- read_excel(here("Data/Ready_data/Data_main.xlsx"), sheet = "DATOSS",
 view(df1)
 str(df1)
 
-# reemplazar na y correccion de tipos de datos
+
+# reemplazar na y correccion tipo de datos --------------------------------
+
+
 df1 <- df1 %>% 
   rename_all(toupper)
 str(df1)
 
 df1$DIRECCION
 
+chartoreplace <- c("NA", "-", ".") 
 df1 <- df1 %>% 
-  mutate(across(.cols = where(is.character), .fns = ~replace(., . == "NA" , NA) ))
+  mutate(across(.cols = where(is.character), 
+                .fns = ~replace(.x, .x %in% chartoreplace, NA)))
 view(df1)
+
+
+
+
 
 
 ###----------------------------------
@@ -52,6 +61,11 @@ remplazar <- function(q) {
 
 df1 <-  df1 %>% 
   mutate(across(.cols = where(is.character), .fns = remplazar))
+###
+# usando argumento .x
+df12 <- df1 %>% 
+  mutate(across(.cols = where(is.character), .fns = ~replace(.x, .x == "NA" , NA) ))
+view(df12)
 ###--------------------------------------
 
 
@@ -65,6 +79,10 @@ df1 <- df1 %>%
 
 view(df1)
 # Data_main ya esta preparado para empezar a trabajar los datos en R
+
+#AllOk
+
+
 
 
 
@@ -83,7 +101,11 @@ View(df2)
 
 #ver si hay algun na
 any(is.na(df2))
+df2 <- df2 %>% 
+  rename_all(toupper)
+str(df2)
 
+view(df2)
 # AllOk
 
 
@@ -93,8 +115,14 @@ any(is.na(df2))
 # 3. LandSat indices ------------------------------------------------------
 
 df3 <- read.csv(here("Data/Ready_data/LandSat_indices.csv"))
-as.tibble(df3)
+df3 <- as_tibble(df3)
+
+#ver si hay algun na
+any(is.na(df3))
+df3 <- df3 %>% 
+  rename_all(toupper)
 str(df3)
+
 view(df3)
 
 # AllOk
@@ -110,11 +138,46 @@ view(df3)
 # 4. LandSat indices2 -----------------------------------------------------
 
 df4 <- read.csv(here("Data/Ready_data/LandSat_indices2.csv"))
-as.tibble(df4)
+df4 <- as_tibble(df4)
+
+#ver si hay algun na
+any(is.na(df4))
+df4 <- df4 %>% 
+  rename_all(toupper)
 str(df4)
+
 view(df4)
 
 # AllOk
+
+
+
+
+
+
+
+
+
+# 5. LandSat indices3 -----------------------------------------------------
+
+df5 <- read.csv(here("Data/Ready_data/LandSat_indices3.csv"))
+df5 <- as_tibble(df5)
+
+#ver si hay algun na
+any(is.na(df5))
+df5 <- df5 %>% 
+  rename_all(toupper)
+str(df5)
+
+view(df5)
+
+# AllOk
+
+
+
+
+
+
 
 
 
