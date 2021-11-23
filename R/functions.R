@@ -179,3 +179,58 @@ func_df_ready <- function(listdfs) {
 
 
 
+
+
+
+
+
+# a solicitud de tereso
+# seleccion variables en base a un equipo de expertos :)
+# funcion seleccion vaiables importantes ----------------------------------
+
+
+func_important_vars <- function(list_dfs) {
+  
+  list_dfs <- 
+  map(list_dfs, .f = ~.x %>% 
+        select(CONTEO, SUBTRANSECTO, TEMPORADA, ALTITUD, 
+               TOTAL_CARROS, TURNO,
+               CLASE, DIST_RIOS_MEAN, DIST_URBANIZACION_MEAN, 
+               DIST_AGRICOLA_MEAN, DIST_PENDIENTE_MEAN, NDVI_VEGETACION_MEAN,
+               HI, SPD, TEMP_SUELO, DIST_ELECTRICOS_MEAN, NDMI_HUMEDAD_MEAN)
+      )
+  
+  return(list_dfs)
+}
+
+
+
+
+
+# funcion seleccionar variables (antropogenicas) --------------------------
+
+
+func_important_var_antro <- function(list_dfs) {
+  
+  list_dfs <- 
+    map(list_dfs, .f = ~.x %>% 
+          select(CONTEO, SUBTRANSECTO, TEMPORADA, ALTITUD 
+                 TOTAL_CARROS, TURNO,
+                 CLASE, DIST_RIOS_MEAN, DIST_URBANIZACION_MEAN, 
+                 DIST_AGRICOLA_MEAN, DIST_PENDIENTE_MEAN, NDVI_VEGETACION_MEAN,
+                 HI, SPD, TEMP_SUELO, DIST_ELECTRICOS_MEAN, NDMI_HUMEDAD_MEAN
+                 )
+    )
+  return(list_dfs) 
+}
+
+
+
+
+
+
+# funcion variables ambientales -------------------------------------------
+
+
+
+

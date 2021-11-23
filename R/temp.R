@@ -295,5 +295,48 @@ identical(dfsub1, dfsub2)
 
 
 
+gm1 <- glm(formula = CONTEO ~ SUBTRANSECTO + ALTITUD + HI + SPD + TEMP_SUELO + 
+             TOTAL_CARROS + CAÑADA + ESCURRIMIENTOS + 
+             DIST_PENDIENTE_MEAN + DIST_RIOS_MEAN + DIST_AGRICOLA_MEAN + 
+             DIST_URBANIZACION_MEAN + NDWI_AGUA_MEAN + NDMI_HUMEDAD_MEAN + 
+             NDVI_VEGETACION_MEAN + DIAWEEK, 
+           family = poisson(link = "log"), data = xxall)
+
+
+
+gm1 <- glm(formula = CONTEO ~ ALTITUD + HI + SPD + TEMP_SUELO + 
+             TOTAL_CARROS + DIST_ELECTRICOS_MEAN + 
+             DIST_PENDIENTE_MEAN + DIST_RIOS_MEAN + DIST_AGRICOLA_MEAN + 
+             DIST_URBANIZACION_MEAN + NDWI_AGUA_MEAN + NDMI_HUMEDAD_MEAN + 
+             NDVI_VEGETACION_MEAN + LST_TEMPERATURA_MEAN + DIAWEEK,
+           family = poisson(link = "log"), data = xxall)
+
+gm2 <- glm(formula = CONTEO ~ SUBTRANSECTO + TEMPORADA + ALTITUD + 
+             TOTAL_CARROS + TURNO + CLASE +
+             DIST_RIOS_MEAN + DIST_URBANIZACION_MEAN + DIST_AGRICOLA_MEAN +
+             DIST_PENDIENTE_MEAN + NDVI_VEGETACION_MEAN + HI + SPD +
+             TEMP_SUELO + DIST_ELECTRICOS_MEAN + NDMI_HUMEDAD_MEAN, 
+           family = poisson(link = "log"), data = xxall)
+
+str(xxall)
+
+summary(gm2)
+
+
+
+
+
+
+
+# identificar variables de un tipo de dato
+
+xx <- list_ready$Reptilia
+cor(xx[,sapply(xx, is.numeric)])
+# columnas numericas
+nums <- unlist(lapply(xx, is.numeric))  
+nums
+
+xx[, nums]
+
 
 

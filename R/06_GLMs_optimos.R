@@ -1,32 +1,107 @@
 
 
 
-# GLM modelo --------------------------------------------------------------
 
-view(xxx)
+# GLM models --------------------------------------------------------------
 
 
-gmmolde <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = xxx)
-summary(gmmolde)
-1-gmmolde$deviance/gmmolde$null.deviance
 
-####
-#construccion de todos las combinaciones posibles de variables
+
+# probaremos con las dos funciones de identidad canonicas -----------------
+
+# logaritmica
+
+gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfallgroup)
+summary(gm1)
+alias(gm1)
+AIC(gm1)
+BIC(gm1)
+1-gm1$deviance/gm1$null.deviance   #este es el pseudo r2
+
+
+
+# identidad
+
+gm2 <- glm(formula = CONTEO ~., family = poisson(link = "identity"), data = dfallgroup)
+summary(gm2)
+alias(gm2)
+AIC(gm2)
+BIC(gm2)
+1-gm2$deviance/gm2$null.deviance   #este es el pseudo r2
+
+
+
+
+
+# All posible combinations ------------------------------------------------
+
 backup_options <- options()
 options(na.action = "na.fail")
 
-#funcion de enlace inversa
-fullmodels1 <- dredge(gmmolde)
+#funcion de enlace logaritmica
+fullmodels1 <- dredge(gm1, trace = 2)
 View(fullmodels1)
 sw(fullmodels1)
+view(fullmodels1)
 
-#funcion de enlace logaritmica
-fullmodels2 <- dredge(gma2)
+#funcion de enlace identidad
+fullmodels2 <- dredge(gm2, trace = 2)
 View(fullmodels2)
 sw(fullmodels2)
 
 
 options(backup_options)
+
+
+
+
+
+# get models best ---------------------------------------------------------
+
+gmbest <- get.models(object = fullmodels1, subset = min(AICc))
+gmbest$`4929`
+
+gmbest <- eval(getCall(fullmodels1, 1))
+summary(gmbest)
+visreg(gmbest, gg = TRUE, scale = "response")
+visreg(gmbest, scale = "response")
+
+
+gmbestiden <- eval(getCall(fullmodels2, 1))
+summary(gmbestiden)
+visreg(gmbestiden, gg = TRUE, scale = "response")
+
+
+
+# como se puede ver ambos modelos son muy muy buenos, siendo ligeramente
+# mejores los de la funcion logaritmica
+
+
+
+
+
+sumaw1 <- sw(fullmodels1)
+sumaw1 <- tidy(sumaw1)
+view(sumaw1)
+names(sumaw1) <- c("Variables", "Suma de los pesos de akaike")
+sumaw2
+
+
+# AllOk
+
+
+plotit <- function() {
+  visreg(gmbest, scale = "response")
+}
+
+
+plotit()
+
+
+
+
+
+
 
 
 

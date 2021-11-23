@@ -6,26 +6,23 @@
 
 
 
+View(dfallgroup)
+View(list_ready_var)
 
-View(list_grupos)
-View(list_ready)
 
-xx <- list_ready$Main
-xx
-any(is.na(xx))
+
+str(dfallgroup)
 
 
 # primer glm exploratorio -------------------------------------------------
 
 
 
-gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = xx)
-gm2 <- glm(formula = CONTEO ~., family = poisson, data = xx)
-
-alias(gm2)
-
+gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfallgroup)
 
 summary(gm1)
+alias(gm1)
+
 gm1res <- resid(gm1)
 qqnorm(gm1res)
 hist(gm1res)
@@ -37,11 +34,16 @@ BIC(gm1)
 1-gm1$deviance/gm1$null.deviance   #este es el pseudo r2
 
 
-# parece que hay varias variables muy relacionadas lo cual ocasiona NA en el
-# modelo del glm
+# perfecto, ya es un muy buen modelo inicial, ahora hay que intentar ajustarlo
+
+# AllOk
 
 
 
+
+
+
+###
 # reduccion de variables correlacionadas ----------------------------------
 
 xxcor <- list_cor$Main
@@ -72,16 +74,6 @@ summary(gm1)
 
 
 
-
-
-
-xx <- list_ready$Reptilia
-cor(xx[,sapply(xx, is.numeric)])
-# columnas numericas
-nums <- unlist(lapply(xx, is.numeric))  
-nums
-
-xx[, nums]
 
 
 

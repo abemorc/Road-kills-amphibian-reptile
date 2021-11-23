@@ -4,40 +4,30 @@
 
 
 
+# por grupos de acuerdoa los parametros iniciales -------------------------
+
 
 
 View(list_grupos)
 View(list_ready)
+View(list_ready_var)
 
 #obtener unicamente las columnas numericas
-list_numeric <- map(list_ready, .f = ~.x %>% select(where(is.numeric)))
+list_numeric <- map(list_ready_var, .f = ~.x %>% select(where(is.numeric)))
 
-#crear lista de matrices de correlacion
+
+
+
+# matrices de correlacion spearman ----------------------------------------
+
 list_cor <- map(list_numeric, 
                 .f = ~as.data.frame(cor(.x,use ="complete.obs",
                                         method = "spearman")))
 
 View(list_cor)
 
-# vemos que la variable numero de investigadores no esta
-# relacionada con nada, por lo tanto la podemos desechar
-
-list_index <- map(list_ready, 
-                    .f = ~.x %>% select(c(where(is.numeric), -c(N_INVESTIGATOR))))
-
-#crear lista de matrices de correlacion
-list_cor <- map(list_index, 
-                .f = ~as.data.frame(cor(.x,use ="complete.obs",
-                                        method = "spearman")))
-
-View(list_cor)
-
-
-# map(list_cor, .f = ~write.csv(x = .x))
-
-
-
-
+# ya sale algo mucho mas interesante, ya podemos ver que variables estan 
+# relacionadas unas con otras
 
 
 
@@ -46,25 +36,66 @@ View(list_cor)
 list_cor1 <- map(list_cor, 
                  .f = ~.x[order(abs(.x[,"CONTEO"]), decreasing = TRUE) ,"CONTEO", drop = FALSE])
 View(list_cor1)
+# allok
+
+
+
+# otras estadisticas de la correlacion
+# el p-value de cada relacion
+list_cor2 <- map(list_numeric, .f = ~rcorr(x = as.matrix(.x), type = "spearman"))
+View(list_cor2)
+
+list_cor2 <- map(list_cor2, .f = ~map(.x, .f = as.data.frame))
+View(list_cor2)
 
 
 
 
-# xx <- list_cor$Reptilia
-
-# graficas (hay que hacerlas mejor, con mas cuidado)
-list_index <- map(list_ready, .f = ~.x %>% select(c(2,4:10))) #solo unas variables
-map(list_index, .f = chart.Correlation)
 
 
+# graficos correlacion ----------------------------------------------------
+
+map(list_numeric, .f = ~chart.Correlation(R = .x, method = "spearman"))
 
 
-map(list_index, .f = pairs.panels)
+# quitando algunas variables menos interesantes
+map(list_numeric, .f = ~chart.Correlation(R = .x[,-c(1,6,10,11)], method = "spearman"))
+
+# map(list_numeric, .f = pairs.panels, method = "spearman", stars = TRUE,  
+#     hist.col = 4, smooth = TRUE, scale = F, density = TRUE,
+#     pch = 21, lm = F, jiggle = T, ci = TRUE)
 
 
+# quitando algunas variables menos interesantes
+map(list_numeric, .f = ~pairs.panels(x = .x[,-c(1,6,10,11)], method = "spearman"))
+
+
+# AllOk
 
 
 map(list_cor ,.f = ~write())
+
+
+
+
+
+
+View()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

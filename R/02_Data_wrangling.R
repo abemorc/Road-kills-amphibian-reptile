@@ -351,6 +351,26 @@ View(list_ready)
 
 
 
+# list_dfs variables seleccionadas -----------------------------------------
+
+## sin grupos all data
+list_main_var <- func_important_vars(list_main)
+View(list_main_var)
+dfallgroup <- list_main_var[[1]]
+view(dfallgroup)
+
+
+# dividida por "desired_groups"
+list_ready_var <- func_important_vars(list_ready)
+View(list_ready_var)
+
+
+
+
+
+
+
+
 View()
 
 
