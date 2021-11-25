@@ -340,3 +340,844 @@ xx[, nums]
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+# GLMs fail ---------------------------------------------------------------
+
+
+
+
+
+
+
+# GLM models --------------------------------------------------------------
+
+
+
+# data a usar
+View(list_main_var)
+View(list_ready_var)
+
+
+dfallgroup <- list_main_var[[1]]
+str(dfallgroup)
+
+
+
+
+
+
+# probaremos con las dos funciones de identidad canonicas -----------------
+
+# logaritmica
+
+gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfallgroup)
+summary(gm1)
+alias(gm1)
+AIC(gm1)
+BIC(gm1)
+1-gm1$deviance/gm1$null.deviance   #este es el pseudo r2
+
+
+
+# identidad
+
+gm2 <- glm(formula = CONTEO ~., family = poisson(link = "identity"), data = dfallgroup)
+summary(gm2)
+alias(gm2)
+AIC(gm2)
+BIC(gm2)
+1-gm2$deviance/gm2$null.deviance   #este es el pseudo r2
+
+
+
+
+
+# All posible combinations ------------------------------------------------
+
+backup_options <- options()
+options(na.action = "na.fail")
+
+#funcion de enlace logaritmica
+fullmodels1 <- dredge(gm1, trace = 2)
+View(fullmodels1)
+sw(fullmodels1)
+view(fullmodels1)
+
+
+write.csv(x = fullmodels1, file = here("output/GLM resum/fullmodels_poisson_log.csv"))
+
+
+
+
+#funcion de enlace identidad
+fullmodels2 <- dredge(gm2, trace = 2)
+View(fullmodels2)
+sw(fullmodels2)
+
+
+write.csv(x = fullmodels2, file = here("output/GLM resum/fullmodells_poisson_identity.csv"))
+
+options(backup_options)
+
+
+
+
+
+# get models best ---------------------------------------------------------
+
+gmbest <- get.models(object = fullmodels1, subset = min(AICc))
+gmbest$`4929`
+
+
+
+gmbest <- eval(getCall(fullmodels1, 1))
+summary(gmbest)
+
+visreg(gmbest, gg = FALSE, scale = "response", ask=FALSE)
+visreg(gmbest, scale = "response")
+
+
+gmbestiden <- eval(getCall(fullmodels2, 1))
+summary(gmbestiden)
+visreg(gmbestiden, gg = FALSE, scale = "response", ask=FALSE)
+visreg(gmbestiden, gg = TRUE, scale = "response")
+
+
+a <- tidy((gmmolde1))
+b <- glance(gmmolde1)
+
+write.csv(a, here("Tereso/GLM 1/output data/glm1.csv"))
+write.csv(b, here("Tereso/GLM 1/output data/glm1_performance.csv"))
+
+# como se puede ver ambos modelos son muy muy buenos, siendo ligeramente
+# mejores los de la funcion logaritmica
+
+
+
+
+
+sumaw1 <- sw(fullmodels1)
+sumaw1 <- tidy(sumaw1)
+
+names(sumaw1) <- c("Variables", "Suma de los pesos de akaike")
+view(sumaw1)
+
+
+# AllOk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# funcion glm -------------------------------------------------------------
+
+func_glm <- function(df) {
+  
+  gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = df)
+  resumen1 <- summary(gm1)
+  alias(gm1)
+  AIC(gm1)
+  BIC(gm1)
+  1-gm1$deviance/gm1$null.deviance   #este es el pseudo r2
+  
+  
+  # identidad
+  
+  gm2 <- glm(formula = CONTEO ~., family = poisson(link = "identity"), data = df)
+  resumen2 <- summary(gm2)
+  alias(gm2)
+  AIC(gm2)
+  BIC(gm2)
+  1-gm2$deviance/gm2$null.deviance   #este es el pseudo r2
+  
+  
+  
+  # All posible combinations ------------------------------------------------
+  
+  backup_options <- options()
+  options(na.action = "na.fail")
+  
+  #funcion de enlace logaritmica
+  fullmodels1 <- dredge(gm1, trace = 2)
+  View(fullmodels1)
+  sw(fullmodels1)
+  
+  
+  options(backup_options)
+  
+  
+  
+  ##
+  
+  gmbest <- eval(getCall(fullmodels1, 1))
+  summary(gmbest)
+  
+  # visreg(gmbest, gg = FALSE, scale = "response", ask=FALSE)
+  
+  
+  
+  # suma de peso akaikes
+  
+  sumaw1 <- sw(fullmodels1)
+  sumaw1 <- tidy(sumaw1)
+  
+  names(sumaw1) <- c("Variables", "Suma de los pesos de akaike")
+  view(sumaw1)
+  # AllOk
+  lista1 <- list(resumen1=resumen1, resumen2=resumen2, gmbest=gmbest, sumaw=sumaw1)
+  return(lista1)
+  
+}
+
+
+
+
+
+
+
+dfreptile <- list_ready_var$Reptilia
+list_reptile <- func_glm(dfreptile)
+
+str(dfreptile)
+
+
+gmrep <-glm()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+par(ask=F)
+devAskNewPage(ask = FALSE)
+
+
+#the solution
+plotit <- function() {
+  visreg(gmbest, scale = "response", ask = FALSE)
+}
+
+visreg(gmbest, scale = "response", ask= FALSE)
+grafica1 <- plotit()
+
+
+plotit2 <- function(modelo) {
+  visreg(modelo, scale = "response", ask = FALSE)
+}
+
+grafica1 <- function() {
+  plotit2(gmbest)
+}
+
+
+a <- grafica1()
+
+a
+
+aa <- list(modelo_grafica = grafica1())
+
+aa$modelo_grafica
+
+# retirar variables -------------------------------------------------------
+
+# metodo analitico --------------------------------------------------------
+
+# retirar variables mediante el grado de correlacion que existe entre ellas:
+
+#asignar variables para prueba
+mcormain <- list_cor$Main
+mcormain <- as.matrix(mcormain)
+str(mcormain)
+
+
+#encontrar variables
+index_quitar <- findCorrelation(x = mcormain, cutoff = 0.2, names = FALSE)
+index_quitar
+index <- which(index_quitar==2)
+index
+index_quitar <- index_quitar[-index]
+
+dfsub2 <- list_ready$Main
+dfsub2 <- dfsub2[,-index_quitar]
+str(dfsub2)
+
+
+# models dredge -----------------------------------------------------------
+
+dfsub2 <- dfsub2[,c(2,5:10)]
+str(dfsub2)
+
+gmmolde1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfsub2)
+summary(gmmolde1)
+1-gmmolde1$deviance/gmmolde1$null.deviance
+
+visreg(gmmolde1, gg = TRUE, scale = "response")
+
+## modelo 1
+
+library(broom)
+
+a <- tidy((gmmolde1))
+b <- glance(gmmolde1)
+
+write.csv(a, here("Tereso/GLM 1/output data/glm1.csv"))
+write.csv(b, here("Tereso/GLM 1/output data/glm1_performance.csv"))
+
+
+backup_options <- options()
+options(na.action = "na.fail")
+
+#funcion de enlace inversa
+fullmodels1 <- dredge(gmmolde1, trace = 2) 
+View(fullmodels1)
+sw(fullmodels1)
+
+#funcion de enlace logaritmica
+fullmodels2 <- dredge(gma2)
+View(fullmodels2)
+sw(fullmodels2)
+
+
+options(backup_options)
+
+# es indispensable reducir el modelo, con 31 variables la cantidad de tiempo 
+# en resolverse es abismal
+
+# FAIL
+
+
+
+
+# modelo seleccionado por criterio de akaike
+gmmolde2 <- glm(formula = CONTEO ~ ALTITUD_MEAN + DIST_ELECTRICOS_MEAN +
+                  NDMI_HUMEDAD_MEAN+ NDWI_AGUA_MEAN, family = poisson(link = "log"), data = dfsub2)
+summary(gmmolde2)
+1-gmmolde1$deviance/gmmolde1$null.deviance
+
+visreg(gmmolde2, gg = TRUE, 
+       scale="response")
+
+
+ccc <- tidy((gmmolde2))
+ddd <- glance(gmmolde2)
+
+write.csv(ccc, here("Tereso/GLM 2/output data/glm2.csv"))
+write.csv(ddd, here("Tereso/GLM 2/output data/glm2_performance.csv"))
+
+
+
+
+
+
+
+xx <- list_ready$Main
+write.csv(x = xx, file = here("Data/Ready_data/obs.csv"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# glm descartado funcion --------------------------------------------------
+
+
+
+# funcion glm -------------------------------------------------------------
+
+func_glm <- function(df) {
+  
+  gm1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = df)
+  resumen1 <- summary(gm1)
+  alias(gm1)
+  AIC(gm1)
+  BIC(gm1)
+  1-gm1$deviance/gm1$null.deviance   #este es el pseudo r2
+  
+  
+  # identidad
+  
+  gm2 <- glm(formula = CONTEO ~., family = poisson(link = "identity"), data = df)
+  resumen2 <- summary(gm2)
+  alias(gm2)
+  AIC(gm2)
+  BIC(gm2)
+  1-gm2$deviance/gm2$null.deviance   #este es el pseudo r2
+  
+  
+  
+  # All posible combinations ------------------------------------------------
+  
+  backup_options <- options()
+  options(na.action = "na.fail")
+  
+  #funcion de enlace logaritmica
+  fullmodels1 <- dredge(gm1, trace = 2)
+  View(fullmodels1)
+  sw(fullmodels1)
+  
+  
+  options(backup_options)
+  
+  
+  
+  ##
+  
+  gmbest <- eval(getCall(fullmodels1, 1))
+  summary(gmbest)
+  
+  # visreg(gmbest, gg = FALSE, scale = "response", ask=FALSE)
+  
+  
+  
+  # suma de peso akaikes
+  
+  sumaw1 <- sw(fullmodels1)
+  sumaw1 <- tidy(sumaw1)
+  
+  names(sumaw1) <- c("Variables", "Suma de los pesos de akaike")
+  view(sumaw1)
+  # AllOk
+  lista1 <- list(resumen1=resumen1, resumen2=resumen2, gmbest=gmbest, sumaw=sumaw1)
+  return(lista1)
+  
+}
+
+
+
+
+
+
+
+
+# graficas ----------------------------------------------------------------
+
+
+
+
+
+dfreptile <- list_ready_var$Reptilia
+list_reptile <- func_glm(dfreptile)
+
+str(dfreptile)
+
+
+gmrep <-glm()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+par(ask=F)
+devAskNewPage(ask = FALSE)
+
+
+#the solution
+plotit <- function() {
+  visreg(gmbest, scale = "response", ask = FALSE)
+}
+
+visreg(gmbest, scale = "response", ask= FALSE)
+grafica1 <- plotit()
+
+
+plotit2 <- function(modelo) {
+  visreg(modelo, scale = "response", ask = FALSE)
+}
+
+grafica1 <- function() {
+  plotit2(gmbest)
+}
+
+
+a <- grafica1()
+
+a
+
+aa <- list(modelo_grafica = grafica1())
+
+aa$modelo_grafica
+
+
+
+# dredge ------------------------------------------------------------------
+
+# retirar variables -------------------------------------------------------
+
+# metodo analitico --------------------------------------------------------
+
+# retirar variables mediante el grado de correlacion que existe entre ellas:
+
+#asignar variables para prueba
+mcormain <- list_cor$Main
+mcormain <- as.matrix(mcormain)
+str(mcormain)
+
+
+#encontrar variables
+index_quitar <- findCorrelation(x = mcormain, cutoff = 0.2, names = FALSE)
+index_quitar
+index <- which(index_quitar==2)
+index
+index_quitar <- index_quitar[-index]
+
+dfsub2 <- list_ready$Main
+dfsub2 <- dfsub2[,-index_quitar]
+str(dfsub2)
+
+
+# models dredge -----------------------------------------------------------
+
+dfsub2 <- dfsub2[,c(2,5:10)]
+str(dfsub2)
+
+gmmolde1 <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfsub2)
+summary(gmmolde1)
+1-gmmolde1$deviance/gmmolde1$null.deviance
+
+visreg(gmmolde1, gg = TRUE, scale = "response")
+
+## modelo 1
+
+library(broom)
+
+a <- tidy((gmmolde1))
+b <- glance(gmmolde1)
+
+write.csv(a, here("Tereso/GLM 1/output data/glm1.csv"))
+write.csv(b, here("Tereso/GLM 1/output data/glm1_performance.csv"))
+
+
+backup_options <- options()
+options(na.action = "na.fail")
+
+#funcion de enlace inversa
+fullmodels1 <- dredge(gmmolde1, trace = 2) 
+View(fullmodels1)
+sw(fullmodels1)
+
+#funcion de enlace logaritmica
+fullmodels2 <- dredge(gma2)
+View(fullmodels2)
+sw(fullmodels2)
+
+
+options(backup_options)
+
+# es indispensable reducir el modelo, con 31 variables la cantidad de tiempo 
+# en resolverse es abismal
+
+# FAIL
+
+
+
+
+# modelo seleccionado por criterio de akaike
+gmmolde2 <- glm(formula = CONTEO ~ ALTITUD_MEAN + DIST_ELECTRICOS_MEAN +
+                  NDMI_HUMEDAD_MEAN+ NDWI_AGUA_MEAN, family = poisson(link = "log"), data = dfsub2)
+summary(gmmolde2)
+1-gmmolde1$deviance/gmmolde1$null.deviance
+
+visreg(gmmolde2, gg = TRUE, 
+       scale="response")
+
+
+ccc <- tidy((gmmolde2))
+ddd <- glance(gmmolde2)
+
+write.csv(ccc, here("Tereso/GLM 2/output data/glm2.csv"))
+write.csv(ddd, here("Tereso/GLM 2/output data/glm2_performance.csv"))
+
+
+
+
+
+
+
+xx <- list_ready$Main
+write.csv(x = xx, file = here("Data/Ready_data/obs.csv"))
+
+
+
+
+
+
+
+
+
+# Correlacion deprecated --------------------------------------------------
+
+
+
+
+
+# Correlacion entre variables ---------------------------------------------
+
+
+
+# data a usar
+View(list_main_var) #global
+View(list_ready_var) #por grupos
+
+
+# Se analizara la correlacion en dos casos:
+
+# 1. data total (sin agrupar)
+# data agrupada de acuerdo a la seleccion del usuario (en este caso CLASE)
+
+
+
+# 1. Global ----------------------------------------------------------------
+
+View(list_main_var)
+
+#obtener unicamente las columnas numericas
+list_numeric1 <- map(list_main_var, .f = ~.x %>% select(where(is.numeric)))
+
+
+
+# matrices de correlacion --------------------------------------------------
+# Se usara el metodo de spearman ya que es el mas adecuado para este conjunto
+# de datos
+
+list_cor1 <- map(list_numeric1, 
+                 .f = ~as.data.frame(cor(.x,use ="complete.obs",
+                                         method = "spearman")))
+
+View(list_cor1)
+# write.csv(x = list_cor$Reptilia, file = here("output/Correlacion/Reptile/matriz.csv"))
+# write.csv(x = list_cor$Amphibia, file = here("output/Correlacion/Anfibios/Data/matrizcor.csv"))
+
+
+# nombres <- c(here("output/Correlacion/Reptile/data/matriz2"), 
+#              here("output/Correlacion/Anfibios/Data/matriz3"))
+# mapply(write.csv, list_cor, file=names)
+
+
+# ya sale algo mucho mas interesante, ya podemos ver que variables estan 
+# relacionadas unas con otras
+
+
+
+# aqui esta el orden de importancia de las variables de acuerdo al la correlacion
+# por el metodo de spearman
+list_cor1 <- map(list_cor, 
+                 .f = ~.x[order(abs(.x[,"CONTEO"]), decreasing = TRUE) ,"CONTEO", drop = FALSE])
+View(list_cor1)
+# allok
+
+# write.csv(x = list_cor1$Reptilia, file = here("output/Correlacion/Reptile/Data/orden.csv"))
+# write.csv(x = list_cor1$Amphibia, file = here("output/Correlacion/Anfibios/Data/orden.csv"))
+
+
+
+
+
+# otras estadisticas de la correlacion
+# el p-value de cada relacion
+list_cor2 <- map(list_numeric, .f = ~rcorr(x = as.matrix(.x), type = "spearman"))
+View(list_cor2)
+
+list_cor2 <- map(list_cor2, .f = ~map(.x, .f = as.data.frame))
+View(list_cor2)
+
+
+# write.csv(x = list_cor2$Reptilia, file = here("output/Correlacion/Reptile/Data/pvalue.csv"))
+# write.csv(x = list_cor2$Amphibia, file = here("output/Correlacion/Anfibios/Data/pvalue.csv"))
+
+
+
+# graficos correlacion ----------------------------------------------------
+
+map(list_numeric, .f = ~chart.Correlation(R = .x, method = "spearman"))
+
+
+# quitando algunas variables menos interesantes
+# map(list_numeric, .f = ~chart.Correlation(R = .x[,-c(1,6,10,11)], method = "spearman"))
+
+# map(list_numeric, .f = pairs.panels, method = "spearman", stars = TRUE,  
+#     hist.col = 4, smooth = TRUE, scale = F, density = TRUE,
+#     pch = 21, lm = F, jiggle = T, ci = TRUE)
+
+
+# quitando algunas variables menos interesantes
+map(list_numeric, .f = ~pairs.panels(x = .x[,], method = "spearman"))
+
+
+# AllOk
+
+
+
+
+
+
+
+
+
+View()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# por grupos de acuerdo a los parametros iniciales -------------------------
+
+
+
+# View(list_grupos)
+# View(list_ready)
+View(dfallgroup)
+View(list_main_var)
+
+
+#obtener unicamente las columnas numericas
+list_numeric <- map(list_ready_var, .f = ~.x %>% select(where(is.numeric)))
+
+
+
+
+# matrices de correlacion spearman ----------------------------------------
+
+list_cor <- map(list_numeric, 
+                .f = ~as.data.frame(cor(.x,use ="complete.obs",
+                                        method = "spearman")))
+
+View(list_cor)
+# write.csv(x = list_cor$Reptilia, file = here("output/Correlacion/Reptile/matriz.csv"))
+# write.csv(x = list_cor$Amphibia, file = here("output/Correlacion/Anfibios/Data/matrizcor.csv"))
+
+
+# nombres <- c(here("output/Correlacion/Reptile/data/matriz2"), 
+#              here("output/Correlacion/Anfibios/Data/matriz3"))
+# mapply(write.csv, list_cor, file=names)
+
+
+# ya sale algo mucho mas interesante, ya podemos ver que variables estan 
+# relacionadas unas con otras
+
+
+
+# aqui esta el orden de importancia de las variables de acuerdo al la correlacion
+# por el metodo de spearman
+list_cor1 <- map(list_cor, 
+                 .f = ~.x[order(abs(.x[,"CONTEO"]), decreasing = TRUE) ,"CONTEO", drop = FALSE])
+View(list_cor1)
+# allok
+
+# write.csv(x = list_cor1$Reptilia, file = here("output/Correlacion/Reptile/Data/orden.csv"))
+# write.csv(x = list_cor1$Amphibia, file = here("output/Correlacion/Anfibios/Data/orden.csv"))
+
+
+
+
+
+# otras estadisticas de la correlacion
+# el p-value de cada relacion
+list_cor2 <- map(list_numeric, .f = ~rcorr(x = as.matrix(.x), type = "spearman"))
+View(list_cor2)
+
+list_cor2 <- map(list_cor2, .f = ~map(.x, .f = as.data.frame))
+View(list_cor2)
+
+
+# write.csv(x = list_cor2$Reptilia, file = here("output/Correlacion/Reptile/Data/pvalue.csv"))
+# write.csv(x = list_cor2$Amphibia, file = here("output/Correlacion/Anfibios/Data/pvalue.csv"))
+
+
+
+# graficos correlacion ----------------------------------------------------
+
+map(list_numeric, .f = ~chart.Correlation(R = .x, method = "spearman"))
+
+
+# quitando algunas variables menos interesantes
+# map(list_numeric, .f = ~chart.Correlation(R = .x[,-c(1,6,10,11)], method = "spearman"))
+
+# map(list_numeric, .f = pairs.panels, method = "spearman", stars = TRUE,  
+#     hist.col = 4, smooth = TRUE, scale = F, density = TRUE,
+#     pch = 21, lm = F, jiggle = T, ci = TRUE)
+
+
+# quitando algunas variables menos interesantes
+map(list_numeric, .f = ~pairs.panels(x = .x[,], method = "spearman"))
+
+
+# AllOk
+
+
+
+
+
+
+
+
+
+View()
+
+
+
+
+
+

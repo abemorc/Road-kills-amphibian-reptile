@@ -184,7 +184,7 @@ func_df_ready <- function(listdfs) {
 
 
 
-# a solicitud de tereso
+# a solicitud de tereso ----------------------------
 # seleccion variables en base a un equipo de expertos :)
 # funcion seleccion vaiables importantes ----------------------------------
 
@@ -194,10 +194,12 @@ func_important_vars <- function(list_dfs) {
   list_dfs <- 
   map(list_dfs, .f = ~.x %>% 
         select(CONTEO, SUBTRANSECTO, TEMPORADA, ALTITUD, 
-               TOTAL_CARROS, TURNO,
+               TURNO,
                CLASE, DIST_RIOS_MEAN, DIST_URBANIZACION_MEAN, 
                DIST_AGRICOLA_MEAN, DIST_PENDIENTE_MEAN, NDVI_VEGETACION_MEAN,
-               HI, SPD, TEMP_SUELO, DIST_ELECTRICOS_MEAN, NDMI_HUMEDAD_MEAN)
+               HI, SPD, TEMP_SUELO, DIST_ELECTRICOS_MEAN, NDMI_HUMEDAD_MEAN
+               ) %>% 
+        rename(PENDIENTES_MEAN=DIST_PENDIENTE_MEAN)
       )
   
   return(list_dfs)
@@ -207,6 +209,9 @@ func_important_vars <- function(list_dfs) {
 
 
 
+
+
+# deprecated:
 # funcion seleccionar variables (antropogenicas) --------------------------
 
 
@@ -214,14 +219,13 @@ func_important_var_antro <- function(list_dfs) {
   
   list_dfs <- 
     map(list_dfs, .f = ~.x %>% 
-          select(CONTEO, SUBTRANSECTO, TEMPORADA, ALTITUD 
-                 TOTAL_CARROS, TURNO,
-                 CLASE, DIST_RIOS_MEAN, DIST_URBANIZACION_MEAN, 
-                 DIST_AGRICOLA_MEAN, DIST_PENDIENTE_MEAN, NDVI_VEGETACION_MEAN,
-                 HI, SPD, TEMP_SUELO, DIST_ELECTRICOS_MEAN, NDMI_HUMEDAD_MEAN
-                 )
+          select(CONTEO, SUBTRANSECTO, DIAWEEK,
+                 CLASE, DIST_URBANIZACION_MEAN, 
+                 DIST_AGRICOLA_MEAN, DIST_PENDIENTE_MEAN,
+                 DIST_ELECTRICOS_MEAN, TOTAL_CARROS)
     )
-  return(list_dfs) 
+  
+  return(list_dfs)
 }
 
 
@@ -231,6 +235,22 @@ func_important_var_antro <- function(list_dfs) {
 
 # funcion variables ambientales -------------------------------------------
 
+
+
+func_important_var_ambien <- function(list_dfs) {
+  
+  list_dfs <- 
+    map(list_dfs, .f = ~.x %>% 
+          select(CONTEO, SUBTRANSECTO, TEMPORADA, ALTITUD, 
+                 TURNO, CAÑADA, ESCURRIMIENTOS, 
+                 CLASE, DIST_RIOS_MEAN, 
+                 NDVI_VEGETACION_MEAN, TEMPORADA,
+                 HI, SPD, TEMP_SUELO, NDMI_HUMEDAD_MEAN, NDWI_AGUA_MEAN,
+                 NDVI_VEGETACION_MEAN, LST_TEMPERATURA_MEAN)
+    )
+  
+  return(list_dfs)
+}
 
 
 
