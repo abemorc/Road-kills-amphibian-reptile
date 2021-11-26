@@ -317,3 +317,58 @@ view(sumaw5)
 
 
 
+
+
+
+
+
+# GLM reptile revisitado -----------------------------------------------------
+
+
+View(fullmodels3_1)
+View(fullmodels4_1)
+
+# log
+summary(gmbest3_1)
+# graficos
+visreg(gmbest3_1, gg = FALSE, scale = "response", ask=FALSE)
+
+
+# models identiy
+summary(gmbest4_1)
+visreg(gmbest4_1, gg = FALSE, scale = "response", ask=FALSE)
+
+
+
+View(gmbestsum3_1)
+View(gmbestcrit3_1)
+
+
+View(gmbestsum4_1)
+View(gmbestcrit4_1)
+
+
+
+# tabla de importancia de las variables en el modelo de acuerdo a la suma de
+# los pesos de akaike
+
+# funcion log
+view(sumaw3_1)
+
+# funcion identity
+view(sumaw4_1)
+
+# AllOk
+
+
+# conclusiones: la variable spd en realidad es un "sintoma" de otras variables
+# en particular de las antropogenicas, es decir de la presencia de humanos y de
+# la temperatura
+
+
+
+
+
+
+
+
