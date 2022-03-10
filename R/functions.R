@@ -1,4 +1,5 @@
 
+# por agregar validaciones pen
 
 # function all sub groups -------------------------------------------------
 

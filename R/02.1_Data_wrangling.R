@@ -32,10 +32,11 @@ dfobservaciones <- df1 %>%
                               TEMPORADA == "TRANSICION DE SECAS A LLUVIA", 
                             "TRANSICION",
                             TEMPORADA)
-  ) %>% 
+         ) %>% 
   select(FECHAF, AÑO, MES, SEMANA, DIA, TURNO, TRANSECTO, SUBTRANSECTO, everything())
 
 dfobservaciones
+str(dfobservaciones)
 view(dfobservaciones)
 view(df1)
 
@@ -242,7 +243,7 @@ identical(dfland2, dfland3)
 
 
 
-
+### no usar -down
 # deprecated:
 # manually split data
 # 
@@ -280,6 +281,12 @@ any(is.na(dfsub1))
 
 # AllOk
 
+### no usar -up
+
+
+
+
+
 
 
 
@@ -311,7 +318,7 @@ view(dfland1)
 view(dfland2)
 view(dfland3)
 
-
+# obtenidos "manualmente"
 view(dfsub1)
 View(dfgrupos)
 

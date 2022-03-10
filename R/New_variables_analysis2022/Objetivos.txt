@@ -1,0 +1,14 @@
+Se solicitaron los siguientes analisis
+
+- GLMs para las variables bioticas y abioticas para determinar cuales son las variables de 
+  estas categorias que mas influyen en el atropellamiento de las especies
+
+	-para todas las especies
+	-para reptiles
+	-para anfibios
+
+	Se preparara los datos por separado para cada una de estas categorias
+	ya que algunas variables son exclusivas de cierta especie (como en el primer analisis)
+
+
+

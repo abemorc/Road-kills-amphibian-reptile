@@ -24,7 +24,7 @@ str(dfallgroup)
 # (log, identiy) se probara con ambas para determinar cual explica mejor 
 # la interaccion en base al criterio de akaike (AIC)
 
-# se contruiran todas las posibles combinaciones para ambas funciones
+# se construiran todas las posibles combinaciones para ambas funciones
 
 
 # Funcion de enlace log ---------------------
