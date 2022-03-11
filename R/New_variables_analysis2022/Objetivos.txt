@@ -10,5 +10,19 @@ Se solicitaron los siguientes analisis
 	Se preparara los datos por separado para cada una de estas categorias
 	ya que algunas variables son exclusivas de cierta especie (como en el primer analisis)
 
+- Determinar y ejecutar un metodo analitico para la reduccion y seleccion de variables que  
+  presentan multicolinealidad
+
+- Preparar y añadir las nuevas variables (dosel, distancias) al conjunto de datos usado en los 
+  GLMs hechos hace unos meses
+
+- Repetir todos los analisis realizados en esa primera ocasion, pero ahora incluyendo las nuevas 
+  variables
+
+(por confirmar)
+- Realizar nuevos GLMs para las variables bioticas y abioticas
+
+
+
 
 

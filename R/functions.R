@@ -110,7 +110,7 @@ funcprueba <- function(listdfs) {
 
 
 
-# dfs ready to analisys ------------------------------------------------
+# dfs ready to analysis ------------------------------------------------
 
 #recibe como argumento una lista de dataframes para preparar todos
 #para el analisis
@@ -176,6 +176,49 @@ func_df_ready <- function(listdfs) {
 
 
 
+
+
+
+
+
+
+# dfs ready to analysis2 ------------------------------------------------
+
+#recibe como argumento una lista de dataframes para preparar todos
+#para el analisis2
+
+func_df_ready2 <- function(listdfs) {
+  
+  listdfs <- map(.x = listdfs,
+                 .f = ~.x %>% 
+                   left_join(y = dfdosel, by = "SUBTRANSECTO") %>% 
+                   left_join(y = dfcana, by = "SUBTRANSECTO") %>% 
+                   na.omit()
+                 )
+
+  return(listdfs)
+  
+  # AllOk
+  
+}
+
+
+func_df_ready3 <- function(listdfs) {
+  
+  listdfs <- map(.x = listdfs,
+                 .f = ~.x %>% 
+                   left_join(y = dfdosel, by = "SUBTRANSECTO") %>% 
+                   left_join(y = dfcana, by = "SUBTRANSECTO") %>% 
+                   select(-c(TRANSECTO, N_INVESTIGATOR, AÑO, VIVO, MUERTO,
+                             DIRECCION, UBICACION_T, CONDICION, GENERO, ESPECIE)) %>% 
+                   na.omit
+  )
+  
+  return(listdfs)
+  
+  # AllOk
+  
+}
 
 
 

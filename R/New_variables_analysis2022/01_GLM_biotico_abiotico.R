@@ -20,7 +20,7 @@ fvars_bio <- function(list_dfs) {
   
   list_dfs <- 
     map(list_dfs, .f = ~.x %>% 
-          select(SUBTRANSECTO, TRANSECTO, CONTEO, 
+          select(SUBTRANSECTO, CONTEO, 
                  DEG, CHIL, RH_C, ALTITUD, HI, DP, BULB, BARO, SPD, TC, TS,
                  TEMP_ASF, TEMP_SUELO, ALTITUD, TEMPORADA, ESCURRIMIENTOS,
                  NDVI_VEGETACION_MEAN, NDWI_AGUA_MEAN, NDMI_HUMEDAD_MEAN,
@@ -38,7 +38,7 @@ fvars_abio <- function(list_dfs) {
   
   list_dfs <- 
     map(list_dfs, .f = ~.x %>% 
-          select(SUBTRANSECTO, TRANSECTO, CONTEO,
+          select(SUBTRANSECTO, CONTEO,
                  DIAWEEK, CAÑADA, TURNO, DIST_URBANIZACION_MEAN, 
                  DIST_ELECTRICOS_MEAN, DIST_AGRICOLA_MEAN
                  )
@@ -76,24 +76,66 @@ gmbioall_res
 # dfbio_all <- dfbio_all[-c(1, 2)]  #no funciono
 
 ##########################3
-# pruebas findcorrelation
+# correccion 10/03/22
 
-nums <- sapply(dfbio_all, is.numeric)
-data.numeric <- dfbio_all[ , nums]
+varnums <- sapply(dfbio_all, is.numeric)
+data.numeric <- dfbio_all[ , varnums]
 dfbio_all
 data.numeric
+is.na(data.numeric)
+anyNA(data.numeric)
 data.without_na <- na.omit(data.numeric)
-cor_matrix <- cor(data.without_na)
+identical(data.numeric, data.without_na)
+cor_matrix <- cor(data.without_na, use ="complete.obs", method = "spearman")
 View(cor_matrix)
+str(cor_matrix)
+findCorrelation(cor_matrix, 0.3, verbose = T, names = T)
+varsc <- findCorrelation(cor_matrix, 0.9, verbose = T, names = T)
 
-varsc <- findCorrelation(cor_matrix, 0.9, verbose = T, names = F)
-dfbio_all <- dfbio_all[-varsc]
+varsc
+dfbio_all
+dfbio_all <- dfbio_all %>% select(-any_of(varsc))
+dfbio_all
+str(dfbio_all)
 
-
-
-
+# AllOk
 
 #############################
+
+# repetir glm
+gmbio_all <- glm(formula = CONTEO ~., family = poisson(link = "log"), data = dfbio_all)
+
+summary(gmbio_all)
+alias(gmbio_all)
+
+gmbioall_res <- resid(gmbio_all)
+gmbioall_res
+
+qqnorm(gmbioall_res)
+hist(gmbioall_res)
+plot(density(gmbioall_res))
+
+AIC(gmbio_all)
+BIC(gmbio_all)
+
+
+
+backup_options <- options()
+options(na.action = "na.fail")
+
+biomodels <- dredge(gmbio_all, trace = 2)
+sw(biomodels)
+bioall_sw <- sw(biomodels)
+bioall_sw <- tidy(bioall_sw)
+names(bioall_sw) <- c("Variables", "Suma de los pesos de akaike")
+View(bioall_sw)
+options(backup_options)
+
+# se encontro las variables bioticas y ambientales que mas influyen en el 
+# atropellamiento de las especies en la carretera tuxtepec oaxaca 
+
+
+
 
 
 
@@ -134,9 +176,9 @@ abiomodels <- dredge(gmabio_all, trace = 2)
 sw(abiomodels)
 abioall_sw <- sw(abiomodels)
 abioall_sw <- tidy(abioall_sw)
-names(sumaw1) <- c("Variables", "Suma de los pesos de akaike")
+names(abioall_sw) <- c("Variables", "Suma de los pesos de akaike")
 View(abioall_sw)
-
+options(backup_options)
 
 # encontramos ya cuales son las variables abioticas que influyen mas en el 
 # atropellamiento para todas las especies.
@@ -152,6 +194,8 @@ View(abioall_sw)
 
 
 # Anfibios ----------------------------------------------------------------
+
+
 
 
 

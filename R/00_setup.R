@@ -20,7 +20,7 @@ if (any(installed_packages == FALSE)) {
 options(warn = oldw)
 
 options(scipen = 999)
-# options(scipen=0, digits=7)
+options(scipen=0, digits=7)
 
 # carga de librerias usadas en proyecto road kills -------------------------
 
@@ -40,6 +40,6 @@ library(broom)
 library(Hmisc)
 
 
-load(here("24.11.RData"))
+# load(here("24.11.RData"))
 
 
