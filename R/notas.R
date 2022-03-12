@@ -67,7 +67,6 @@ dfobservaciones %>%
 
 
 
-
 tesp <- transpose(especies1)
 view(tesp)
 
