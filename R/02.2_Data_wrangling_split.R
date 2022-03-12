@@ -64,10 +64,25 @@ View(list_ready)
 # seleccion de variables que se indicaron
 list_ready_var <- func_important_vars(list_ready)
 View(list_ready_var)
-
-
-
 # AllOk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

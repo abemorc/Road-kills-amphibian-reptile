@@ -21,16 +21,20 @@ fvars_bio <- function(list_dfs) {
   list_dfs <- 
     map(list_dfs, .f = ~.x %>% 
           select(SUBTRANSECTO, CONTEO, 
-                 DEG, CHIL, RH_C, ALTITUD, HI, DP, BULB, BARO, SPD, TC, TS,
+                 DEG, CHIL, RH_C, HI, DP, BULB, BARO, SPD, TC, TS,
                  TEMP_ASF, TEMP_SUELO, ALTITUD, TEMPORADA, ESCURRIMIENTOS,
                  NDVI_VEGETACION_MEAN, NDWI_AGUA_MEAN, NDMI_HUMEDAD_MEAN,
-                 DIST_RIOS_MEAN, DIST_PENDIENTE_MEAN, LONG_TOTAL, PESO
+                 DISTANCIA_ARROYOS_MEAN, DIST_PENDIENTE_MEAN, LONG_TOTAL, PESO,
+                 DOSEL_MEDIA
                  ) %>% 
           rename(PENDIENTES_MEAN=DIST_PENDIENTE_MEAN)
         )
   
   return(list_dfs)
 }
+
+
+
 
 # variables abioticas
 
@@ -53,6 +57,12 @@ View(list_allbio)
 
 list_allabio <- fvars_abio(list_main)
 View(list_allabio)
+
+
+
+
+
+
 
 # ---------------------------------------------------
 # glm bioticas

@@ -203,6 +203,7 @@ func_df_ready2 <- function(listdfs) {
 }
 
 
+# se acabo descartando por cambios de utimo momento en los analisis
 func_df_ready3 <- function(listdfs) {
   
   listdfs <- map(.x = listdfs,
@@ -212,15 +213,27 @@ func_df_ready3 <- function(listdfs) {
                    select(-c(TRANSECTO, N_INVESTIGATOR, AÑO, VIVO, MUERTO,
                              DIRECCION, UBICACION_T, CONDICION, GENERO, ESPECIE)) %>% 
                    na.omit
-  )
+                 )
   
   return(listdfs)
   
-  # AllOk
+}
+####
+func_df_ready4 <- function(listdfs) {
+  
+  listdfs <- map(.x = listdfs,
+                 .f = ~.x %>% 
+                   left_join(y = dfavan, by = "SUBTRANSECTO") %>% 
+                   left_join(y = dfcana, by = "SUBTRANSECTO") %>% 
+                   left_join(y = dfgao, by = "SUBTRANSECTO") %>%
+                   mutate(across(.cols = where(is.numeric),
+                                 .fns = ~replace(.x, is.na(.x), mean(.x, 
+                                                                     trim = 0.05,
+                                                                     na.rm=TRUE)))))
+  
+  return(listdfs)
   
 }
-
-
 
 
 
