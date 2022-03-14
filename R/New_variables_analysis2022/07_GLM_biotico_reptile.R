@@ -69,12 +69,34 @@ gm_bio_rep_b <- eval(getCall(modelbiorep, 1))
 summary(gm_bio_rep_b)
 
 # graficos
-visreg(gm_bio_rep_b, gg = FALSE, scale = "response", ask=FALSE)
+
+visreg(gm_bio_rep_b, xvar = "BARO", gg = FALSE, scale = "response",
+       main = "Reptiles",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Presión Barométrica",
+       ylab = "Número de atropellamientos",
+       line=list(col="orangered"),
+       fill=list(col="orange")
+)
+
+visreg(gm_bio_rep_b, xvar = "DISTANCIA_ARROYOS_MEAN", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Distancia a Arroyos",
+       ylab = "Número de atropellamientos",
+       line=list(col="orangered"),
+       fill=list(col="orange")
+)
 
 
 
 # Conclusion: las variables que mas  influyen en el atropellamiento de los 
-# reptiles para las variables bioticas son las 
+# reptiles para las variables bioticas son las siguientes:
+View(swbiorep)
 
 
 

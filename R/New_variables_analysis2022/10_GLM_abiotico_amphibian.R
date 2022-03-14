@@ -49,8 +49,31 @@ gm_abio_amp_b <- eval(getCall(modelabioamp, 1))
 summary(gm_abio_amp_b)
 
 # graficos
-visreg(gm_abio_amp_b, gg = FALSE, scale = "response", ask=FALSE)
 
+visreg(gm_abio_amp_b, xvar = "DIST_AGRICOLA_MEAN", gg = FALSE,
+       main = "Anfibios",
+       col.main= "gray60",
+       sub = "variable abiótica",
+       cex.sub=0.7,
+       xlab = "Distancia a Zonas agrícolas",
+       ylab = "Número de atropellamientos",
+       line=list(col="olivedrab"),
+       fill=list(col="yellowgreen")
+)
+
+visreg(gm_abio_amp_b, xvar = "DIST_URBANIZACION_MEAN", gg = FALSE,
+       main = "Anfibios",
+       col.main= "gray60",
+       sub = "variable abiótica",
+       cex.sub=0.7,
+       xlab = "Distancia a Zonas Urbanizadas",
+       ylab = "Número de atropellamientos",
+       line=list(col="olivedrab"),
+       fill=list(col="yellowgreen")
+)
+
+
+View(swabioamp)
 
 
 

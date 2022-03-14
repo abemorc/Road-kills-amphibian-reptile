@@ -138,7 +138,38 @@ gm_bio_all_b <- eval(getCall(modelbioall, 1))
 summary(gm_bio_all_b)
 
 # graficos
-visreg(gm_bio_all_b, gg = FALSE, scale = "response", ask=FALSE)
+visreg(gm_bio_all_b, xvar = "BARO", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Presión Barométrica",
+       ylab = "Número de atropellamientos",
+       line=list(col="steelblue"),
+       fill=list(col="skyblue")
+       )
+
+visreg(gm_bio_all_b, xvar = "DOSEL_MEDIA", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Dosel arbóreo ",
+       ylab = "Número de atropellamientos",
+       line=list(col="steelblue"),
+       fill=list(col="skyblue")
+       )
+
+visreg(gm_bio_all_b, xvar = "TC", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Temperatura",
+       ylab = "Número de atropellamientos",
+       line=list(col="steelblue"),
+       fill=list(col="skyblue")
+)
 
 
 

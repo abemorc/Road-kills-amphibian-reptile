@@ -51,7 +51,41 @@ summary(gm_abio_rep_b)
 alias(gm_abio_rep_b)
 
 # graficos
-visreg(gm_abio_rep_b, gg = FALSE, scale = "response", ask=FALSE)
+
+visreg(gm_abio_rep_b, xvar = "DIST_AGRICOLA_MEAN", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable abiótica",
+       cex.sub=0.7,
+       xlab = "Distancia a Agrícolas",
+       ylab = "Número de atropellamientos",
+       line=list(col="orangered"),
+       fill=list(col="orange")
+)
+
+visreg(gm_abio_rep_b, xvar = "DIST_ELECTRICOS_MEAN", gg = FALSE,
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable abiótica",
+       cex.sub=0.7,
+       xlab = "Distancia a Zonas Eléctricas",
+       ylab = "Número de atropellamientos",
+       line=list(col="orangered"),
+       fill=list(col="orange")
+)
+
+visreg(gm_abio_rep_b, xvar = "TURNO", gg = FALSE,
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable abiótica",
+       cex.sub=0.7,
+       xlab = "Turno",
+       ylab = "Número de atropellamientos",
+       line=list(col="orangered"),
+       fill=list(col="orange")
+)
+
+View(swabiorep)
 
 
 

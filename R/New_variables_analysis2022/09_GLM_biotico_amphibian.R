@@ -68,13 +68,44 @@ gm_bio_amp_b <- eval(getCall(modelbioamp, 1))
 summary(gm_bio_amp_b)
 
 # graficos
-visreg(gm_bio_amp_b, gg = FALSE, scale = "response", ask=FALSE)
+
+visreg(gm_bio_amp_b, xvar = "BARO", gg = FALSE, scale = "response",
+       main = "Anfibios",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Presión Barométrica",
+       ylab = "Número de atropellamientos",
+       line=list(col="olivedrab"),
+       fill=list(col="yellowgreen")
+)
+
+visreg(gm_bio_amp_b, xvar = "DOSEL_MEDIA", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Dosel",
+       ylab = "Número de atropellamientos",
+       line=list(col="olivedrab"),
+       fill=list(col="yellowgreen")
+)
+
+
+visreg(gm_bio_amp_b, xvar = "PENDIENTES_MEAN", gg = FALSE, scale = "response",
+       main = "Todas las Clases",
+       col.main= "gray60",
+       sub = "variable biótica",
+       cex.sub=0.7,
+       xlab = "Pendiente carretera",
+       ylab = "Número de atropellamientos",
+       line=list(col="olivedrab"),
+       fill=list(col="yellowgreen")
+)
 
 
 
-
-
-
+View(swbioamp)
 
 
 
