@@ -1,0 +1,7 @@
+Se solicitó retirar algunas variables (longitud_total, peso, subtransecto, TC)
+Se conserva exactamente igual todo lo demas (metodologia, etc)
+
+
+
+
+
